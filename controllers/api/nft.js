@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path');
+const nftHelper = require('../../helpers/dna-parser');
 const sharp = require('sharp');
 const gm = require('gm');
 
@@ -11,9 +12,12 @@ class NFTController {
     if (!type || !id) {
       res.status(404).json({ error: 'Wrong format' })
     }
+    // get params for render by type and id
+    const nft = await nftHelper.get(type, id);
+    console.log('nft', nft);
     res.setHeader('Content-Type', 'image/png');
     if (type === 'avatar') {
-      buildAvatar(width, height, res);
+      buildAvatar(nft, width, height, res);
     } else {
       res.status(404).json({ error: 'File not found' })
     }
@@ -21,7 +25,7 @@ class NFTController {
   }
 }
 
-function buildAvatar(width, height, res) {
+function buildAvatar(nft, width, height, res) {
   try {
     const folderPathAvatar = path.resolve(`resources/avatar/`); // path to folder
 
@@ -29,7 +33,7 @@ function buildAvatar(width, height, res) {
     const bodyImageUrl = sharp(folderPathAvatar + '/avatar.png'); // path to orig img
 
     gm(hairImageUrl)
-    .in('-fill', '#c600ff') // set color to change
+    .in('-fill', nft.human_hair_color) // set color to change
     .in('-opaque', '#11df11') // set color for change
     .toBuffer((err, buff) => {
       bodyImageUrl
