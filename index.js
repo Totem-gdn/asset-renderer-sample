@@ -7,18 +7,17 @@ const express     = require('express'),
       server      = require('http').createServer(app),
       bodyParser  = require('body-parser'),
       cors        = require('cors'),
-      queue       = require('express-queue'),
-      path        = require('path');
+      queue       = require('express-queue');
 
 
+// потрібно для ліміту по запитах на сервер, тому що бібліотеки для рендереру растрових зоображень сильно прожорліві, 
+// і ми додаємо чергу з одним активним запитом щоб не було помилки по памяті
 app.use(queue({ activeLimit: 1, queuedLimit: -1 }));
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
-
-app.set('views', path.join(__dirname, "views"));
 
 
 

@@ -1,56 +1,35 @@
 'use strict'
+// підключеноємо необхідні бібліотеки для роботи
 const path = require('path');
-const nftHelper = require('../../helpers/dna-parser');
-const sharp = require('sharp');
-const gm = require('gm');
+const fs = require('fs')
 
 class NFTController {
   async get(req, res, next) {
-    const { type, id } = req.params;
-    let { width = 1080, height = 1080 } = req.query
-
-    if (!type || !id) {
+    // виймаємо з параметрів урл - ід, по якій ми відображаємо певну картинку
+    const { id } = req.params;
+    // якщо айді нема, то формуємо відповідь з помилкою
+    if (!id) {
       res.status(404).json({ error: 'Wrong format' })
     }
-    // get params for render by type and id
-    const nft = await nftHelper.get(type, id);
-    console.log('nft', nft);
-    res.setHeader('Content-Type', 'image/png');
-    if (type === 'avatar') {
-      buildAvatar(nft, width, height, res);
-    } else {
-      res.status(404).json({ error: 'File not found' })
+
+    // будуємо блок try-catch для відловлювання помилок
+    try {
+      // будуємо з айді шлях до нашого файлу
+      // ми айді ділимо по модулю на 12, тому що в даному кроці в папці resources є 12 файлів
+      const filePath = path.resolve(`resources/${id % 12}.png`);
+      // якщо дійсно ми знайшли такий файл у нашій папці
+      if (fs.existsSync(filePath)) {
+        // ми його відправляємо користувачеві і відобраємо у браузері
+        res.sendFile(filePath);
+      } else {
+        // цей блок відповідає за те, що в рачі чого ми не знайшли файл, і формуємо помилку користувачеві
+        res.status(404).json({ error: 'File not found' })
+      }
+    } catch (error) {
+      // цей блок виконує роль того, що якщо в блоці try виникне якась помилка, то ми можемо її опрацювати
+      res.status(404).json({ error })
     }
 
-  }
-}
-
-function buildAvatar(nft, width, height, res) {
-  try {
-    const folderPathAvatar = path.resolve(`resources/avatar/`); // path to folder
-
-    const hairImageUrl = sharp(folderPathAvatar + '/mask.png'); // path to mask
-    const bodyImageUrl = sharp(folderPathAvatar + '/avatar.png'); // path to orig img
-
-    gm(hairImageUrl)
-    .in('-fill', nft.human_hair_color) // set dynamic color to hair
-    .in('-opaque', '#11df11') // set color for change
-    .toBuffer((err, buff) => {
-      bodyImageUrl
-      .composite([{ input: buff, tile: true, blend: 'multiply' }])
-      .toBuffer().then(cBuff => {
-        sharp(cBuff).resize(+width, +height, {
-          fit: 'contain',
-          background: 'transparent'
-        })
-
-        .toBuffer().then((dBuff) => {
-          res.send(dBuff)
-        })
-      })
-    })
-  } catch (error) {
-    res.status(500).json({ error: 'Please try again' })
   }
 }
 

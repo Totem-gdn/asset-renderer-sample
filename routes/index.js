@@ -3,6 +3,6 @@ const controllers = require('../controllers');
 const router = express.Router();
 
 /* GET home page. */
-router.get('/:type/:id', controllers.api.nft.get);
+router.get('/:id', controllers.api.nft.get);
 
 module.exports = router;
