@@ -33,7 +33,7 @@ function buildAvatar(nft, width, height, res) {
     const bodyImageUrl = sharp(folderPathAvatar + '/avatar.png'); // path to orig img
 
     gm(hairImageUrl)
-    .in('-fill', nft.human_hair_color) // set color to change
+    .in('-fill', nft.human_hair_color) // set dynamic color to hair
     .in('-opaque', '#11df11') // set color for change
     .toBuffer((err, buff) => {
       bodyImageUrl
