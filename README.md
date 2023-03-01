@@ -9,6 +9,9 @@ To install the project, follow these steps:
 
 Clone the project repository to your local computer.
 Run the command npm install to install project dependencies.
+
+pls check install-im-{{u-system}}.txt file for install graphicsmagick and imagemagick on u computer.
+
 Run the command npm start to start a local server and view the project in a browser by url http://localhost:3000/gem/1.
 ## Usage
 You can upload your own assets and display them in the project. To do this, upload your assets to the resources folder.
