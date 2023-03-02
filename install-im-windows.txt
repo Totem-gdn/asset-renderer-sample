@@ -1,0 +1,19 @@
+To install ImageMagick and GraphicsMagick on Windows, you can follow these steps:
+
+Download the installer for ImageMagick from the official website: https://imagemagick.org/script/download.php#windows. Choose the appropriate version for your system (32-bit or 64-bit) and run the installer.
+
+Follow the instructions in the installer to complete the installation process. You may need to restart your computer after the installation is complete.
+
+Download the installer for GraphicsMagick from the official website: http://www.graphicsmagick.org/download.html. Choose the appropriate version for your system (32-bit or 64-bit) and run the installer.
+
+Follow the instructions in the installer to complete the installation process. You may need to restart your computer after the installation is complete.
+
+Once the installations are complete, you can verify that the tools are installed correctly by opening a command prompt and running the following commands:
+
+Copy code
+magick -version
+Copy code
+gm version
+These commands will output the version information for ImageMagick and GraphicsMagick respectively.
+
+Note: During installation, you may have the option to add ImageMagick or GraphicsMagick to your system's PATH environment variable. This will allow you to run the commands from any directory in the command prompt without having to specify the full path to the executables. If you didn't add them to PATH, you'll need to specify the full path to the executables when running the commands.
